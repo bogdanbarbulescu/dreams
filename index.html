@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Ascent - Your Dreams</title>
+    <title>Ascent - Your Dreams & Reflections</title>
     <!-- Link Google Fonts for GlowGen -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="style.css">
     <!-- Basic Favicon Placeholder -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⛰️</text></svg>">
-    <!-- *** ADD CHART.JS SCRIPT HERE *** -->
+    <!-- Chart.js Script -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js" defer></script>
 </head>
 <body class="light-theme"> <!-- Default theme class -->
@@ -76,23 +76,19 @@
                 </div>
             </div>
 
-            <!-- Metrics & Charts Section (Updated) -->
+            <!-- Metrics & Charts Section -->
             <div id="metrics-charts-section" class="card">
                 <h3>Progress Insights</h3>
                 <div id="streak-metrics" class="metric-display">
-                     <!-- Streak info inserted by JS -->
                      <p>Current Streak: <span id="current-streak">0</span> days 🔥</p>
                      <p>Longest Streak: <span id="longest-streak">0</span> days</p>
                 </div>
-                <!-- *** CHART CANVAS ADDED *** -->
                 <div id="habit-breakdown-chart-container" class="chart-container">
                     <h4>Habit Performance (Last 7 Days)</h4>
                      <div class="chart-wrapper">
                         <canvas id="habit-breakdown-chart"></canvas>
                      </div>
-                     <!-- Toggle buttons can be added here later -->
                 </div>
-                <!-- *** HEATMAP CONTAINER REMAINS *** -->
                  <div id="heatmap-container" class="heatmap-container">
                      <h4>Consistency Heatmap (Last ~35 Days)</h4>
                      <div id="heatmap-grid">
@@ -110,7 +106,7 @@
                  <span><!-- Spacer --></span>
              </div>
             <form id="goal-form" class="card">
-                <input type="hidden" id="editing-dream-id" value=""> <!-- Store ID when editing -->
+                <input type="hidden" id="editing-dream-id" value="">
                 <div class="form-group">
                     <label for="dream-input">Your Dream (The Peak):</label>
                     <input type="text" id="dream-input" placeholder="e.g., Run a marathon, Learn Piano" required>
@@ -154,7 +150,27 @@
              </div>
          </div>
 
-        <!-- 5. Quotes View -->
+        <!-- 5. Reflection View (NEW) -->
+        <div id="reflection-view" class="view">
+             <h2>Year End Reflection</h2> <!-- Or specific year -->
+             <p class="text-muted">Reflect on your year to plan better for the future.</p>
+             <div id="reflection-list">
+                 <!-- Reflection items inserted by JS -->
+                 <!-- Example Structure:
+                 <div class="reflection-item card" data-question-id="q1">
+                     <p class="question-text">Question text goes here?</p>
+                     <textarea rows="4" placeholder="Your thoughts..." readonly data-question-id="q1"></textarea>
+                     <div class="reflection-actions">
+                         <button class="edit-reflection-btn secondary-button">Edit</button>
+                         <button class="save-reflection-btn" style="display: none;">Save</button>
+                         <button class="delete-reflection-btn danger-button">Delete</button>
+                     </div>
+                 </div>
+                 -->
+             </div>
+        </div>
+
+        <!-- 6. Quotes View -->
         <div id="quotes-view" class="view">
             <h2>Motivation</h2>
             <div class="quote-display card">
@@ -164,12 +180,11 @@
             <button id="next-quote-btn" class="secondary-button">Show Another Quote</button>
         </div>
 
-        <!-- 6. Settings View -->
+        <!-- 7. Settings View -->
         <div id="settings-view" class="view">
             <h2>Settings</h2>
             <div class="setting-item card">
                 <label for="theme-toggle-checkbox">Dark Mode</label>
-                <!-- Simple toggle switch using checkbox -->
                 <label class="switch">
                     <input type="checkbox" id="theme-toggle-checkbox">
                     <span class="slider round"></span>
@@ -178,30 +193,28 @@
             <div class="setting-item card">
                  <h3>Data Management</h3>
                 <button id="reset-data-btn" class="danger-button">Reset Application Data</button>
-                <p class="text-muted small">Warning: This will delete all your dreams and progress permanently.</p>
+                <p class="text-muted small">Warning: This will delete all your dreams, reflections, and progress permanently.</p>
             </div>
-             <!-- Add more settings here -->
         </div>
 
     </main>
 
-    <!-- Fixed Bottom Navigation Bar -->
+    <!-- Fixed Bottom Navigation Bar (Updated) -->
     <nav class="bottom-nav">
         <button data-view="dashboard-view" class="nav-btn active">
-             <!-- Placeholder for icon --> <span class="nav-icon">📊</span>
-            <span class="nav-text">Dashboard</span>
+             <span class="nav-icon">📊</span> <span class="nav-text">Dashboard</span>
         </button>
-         <button data-view="history-view" class="nav-btn"> <!-- History button added -->
-             <span class="nav-icon">📜</span>
-            <span class="nav-text">History</span>
+         <button data-view="history-view" class="nav-btn">
+             <span class="nav-icon">📜</span> <span class="nav-text">History</span>
+        </button>
+         <button data-view="reflection-view" class="nav-btn"> <!-- Reflection button added -->
+             <span class="nav-icon">🤔</span> <span class="nav-text">Reflection</span>
         </button>
         <button data-view="quotes-view" class="nav-btn">
-            <span class="nav-icon">❝</span>
-            <span class="nav-text">Quotes</span>
+            <span class="nav-icon">❝</span> <span class="nav-text">Quotes</span>
         </button>
         <button data-view="settings-view" class="nav-btn">
-            <span class="nav-icon">⚙️</span>
-            <span class="nav-text">Settings</span>
+            <span class="nav-icon">⚙️</span> <span class="nav-text">Settings</span>
         </button>
     </nav>
 
