@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Ascent - Your Dreams</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Basic Favicon Placeholder -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⛰️</text></svg>">
+    <!-- Placeholder for a charting library -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script> -->
+</head>
+<body class="light-theme"> <!-- Default theme class -->
+
+    <!-- Optional Header - Could be dynamic -->
+    <!-- <header class="app-header"> <h1 id="current-view-title">Dashboard</h1> </header> -->
+
+    <main id="main-content">
+
+        <!-- 1. Dashboard View (Default) -->
+        <div id="dashboard-view" class="view active">
+            <h2>Dashboard</h2>
+            <p>Your current aspirations:</p>
+            <div id="dream-cards-container" class="card-container">
+                <!-- Dream cards will be dynamically inserted here by JS -->
+                <!-- Example Card Structure (for reference):
+                <div class="dream-card" data-dream-id="uuid-dream-1">
+                    <h3>Run 10k</h3>
+                    <p class="goal-summary">Complete official 10k race by...</p>
+                    <div class="card-metric">
+                        <label>Consistency (7d):</label>
+                        <span>75%</span>
+                         <progress max="100" value="75"></progress>
+                    </div>
+                </div>
+                 -->
+                 <p id="no-dreams-message" style="display: none; text-align: center; padding: 20px;">No dreams defined yet. Tap 'Add New Dream' to start!</p>
+            </div>
+            <button id="add-dream-btn" class="fab-button" title="Add New Dream">+</button>
+        </div>
+
+        <!-- 2. Dream Detail View -->
+        <div id="dream-detail-view" class="view">
+             <div class="detail-header">
+                <button class="back-btn" data-target="dashboard-view">← Dashboard</button>
+                <h2 id="detail-view-title">Dream Details</h2>
+                <button id="edit-selected-dream-btn" class="edit-btn">Edit</button>
+             </div>
+
+            <!-- Mountain visualization for the selected dream -->
+            <div id="mountain-visualization" class="card">
+                <!-- 1. Dream (Peak) -->
+                <div id="dream-display" class="mountain-peak">
+                    <h3>Dream</h3>
+                    <p id="detail-dream-text">[Dream Text]</p>
+                </div>
+                <!-- 2. SMART Goal (Upper Slope) -->
+                <div id="smart-goal-display" class="mountain-slope">
+                    <h3>SMART Goal</h3>
+                    <p id="detail-smart-goal-text">[SMART Goal Text]</p>
+                    <p id="detail-goal-deadline-display" class="deadline-text">[Target Date]</p>
+                </div>
+                <!-- 3. System (Mid Slope Label) -->
+                <div id="system-label" class="mountain-mid">
+                    <h3>System of Habits</h3>
+                </div>
+                <!-- Consistency Progress Indicator -->
+                <div id="progress-indicator" class="mountain-progress">
+                     <label for="detail-consistency-progress">Recent Consistency:</label>
+                     <progress id="detail-consistency-progress" max="100" value="0"></progress>
+                     <span id="detail-consistency-percentage">0%</span>
+                 </div>
+                <!-- 4. Habits (Base) - Logging happens here -->
+                <div id="habits-display" class="mountain-base">
+                    <h3>Log Today's Actions</h3>
+                    <form id="detail-habits-log-form">
+                        <ul id="detail-habits-list">
+                            <!-- Habit list with checkboxes inserted by JS -->
+                        </ul>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Metrics & Charts Section -->
+            <div id="metrics-charts-section" class="card">
+                <h3>Progress Insights</h3>
+                <!-- Chart canvases or metric displays inserted by JS -->
+                <p>[Charts and detailed metrics will appear here]</p>
+                <!-- Example: <canvas id="consistency-chart"></canvas> -->
+            </div>
+        </div>
+
+        <!-- 3. Plan/Setup View (for Add/Edit) -->
+        <div id="plan-view" class="view">
+             <div class="detail-header">
+                 <button class="back-btn cancel-plan-btn">← Cancel</button>
+                 <h2 id="plan-view-title">Plan Your Ascent</h2>
+                 <span><!-- Spacer --></span>
+             </div>
+
+            <form id="goal-form" class="card">
+                <input type="hidden" id="editing-dream-id" value=""> <!-- Store ID when editing -->
+
+                <div class="form-group">
+                    <label for="dream-input">Your Dream (The Peak):</label>
+                    <input type="text" id="dream-input" placeholder="e.g., Run a marathon, Learn Piano" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="smart-goal-input">SMART Goal (The Target):</label>
+                    <textarea id="smart-goal-input" rows="3" placeholder="Specific, Measurable, Achievable, Relevant, Time-bound goal derived from your Dream..." required></textarea>
+                    <label for="goal-deadline-input">Target Date (Optional):</label>
+                    <input type="date" id="goal-deadline-input">
+                </div>
+
+                <fieldset class="form-group">
+                    <legend>Habits (The Daily Steps - Minimum 3):</legend>
+                    <div id="habits-input-container">
+                        <!-- Habit inputs inserted by JS -->
+                    </div>
+                    <button type="button" id="add-habit-btn" class="secondary-button">Add Another Habit</button>
+                </fieldset>
+
+                <button type="submit" id="save-plan-btn">Save Plan</button>
+                 <!-- Optional: Delete button when editing -->
+                <button type="button" id="delete-dream-btn" class="danger-button" style="display: none;">Delete Dream</button>
+            </form>
+        </div>
+
+        <!-- 4. Quotes View -->
+        <div id="quotes-view" class="view">
+            <h2>Motivation</h2>
+            <div class="quote-display card">
+                <blockquote id="quote-text">[Motivational quote will appear here...]</blockquote>
+                <cite id="quote-author">[Author]</cite>
+            </div>
+            <button id="next-quote-btn" class="secondary-button">Show Another Quote</button>
+        </div>
+
+        <!-- 5. Settings View -->
+        <div id="settings-view" class="view">
+            <h2>Settings</h2>
+
+            <div class="setting-item card">
+                <label for="theme-toggle-checkbox">Dark Mode</label>
+                <!-- Simple toggle switch using checkbox -->
+                <label class="switch">
+                    <input type="checkbox" id="theme-toggle-checkbox">
+                    <span class="slider round"></span>
+                </label>
+            </div>
+
+            <div class="setting-item card">
+                 <h3>Data Management</h3>
+                <button id="reset-data-btn" class="danger-button">Reset Application Data</button>
+                <p class="text-muted small">Warning: This will delete all your dreams and progress permanently.</p>
+            </div>
+             <!-- Add more settings here -->
+        </div>
+
+    </main>
+
+    <!-- Fixed Bottom Navigation Bar -->
+    <nav class="bottom-nav">
+        <button data-view="dashboard-view" class="nav-btn active">
+             <!-- Placeholder for icon --> <span class="nav-icon">📊</span>
+            <span class="nav-text">Dashboard</span>
+        </button>
+        <button data-view="quotes-view" class="nav-btn">
+            <span class="nav-icon">❝</span>
+            <span class="nav-text">Quotes</span>
+        </button>
+        <button data-view="settings-view" class="nav-btn">
+            <span class="nav-icon">⚙️</span>
+            <span class="nav-text">Settings</span>
+        </button>
+    </nav>
+
+    <script src="script.js" defer></script>
+
+</body>
+</html>
