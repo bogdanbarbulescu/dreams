@@ -1,0 +1,634 @@
+/* style.css */
+
+/* --- Base Styles & Reset --- */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    -webkit-tap-highlight-color: transparent; /* Remove tap highlight on mobile */
+}
+
+:root {
+    /* Font variables */
+    --font-primary: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+    --font-headings: var(--font-primary);
+
+    /* Spacing */
+    --spacing-xs: 0.25rem; /* 4px */
+    --spacing-sm: 0.5rem;  /* 8px */
+    --spacing-md: 1rem;    /* 16px */
+    --spacing-lg: 1.5rem;  /* 24px */
+    --spacing-xl: 2rem;    /* 32px */
+
+    /* Sizes */
+    --bottom-nav-height: 60px;
+    --fab-size: 56px;
+}
+
+/* --- Theme Variables --- */
+/* Define Light Theme (Default) */
+body.light-theme {
+    --primary-bg: #f0f2f5; /* Lighter grey background */
+    --secondary-bg: #ffffff; /* Card background */
+    --text-color: #1c1e21; /* Darker text */
+    --text-muted: #65676b;
+    --text-on-accent: #ffffff;
+    --accent-color: #007aff; /* iOS Blue */
+    --accent-color-darker: #0056b3;
+    --border-color: #ced0d4;
+    --success-color: #34c759; /* iOS Green */
+    --danger-color: #ff3b30; /* iOS Red */
+    --header-bg: var(--accent-color); /* Optional header */
+    --header-text: var(--text-on-accent);
+    --shadow-color: rgba(0, 0, 0, 0.1);
+}
+
+/* Define Dark Theme Variables */
+body.dark-theme {
+    --primary-bg: #1c1c1e; /* Dark grey background */
+    --secondary-bg: #2c2c2e; /* Slightly lighter card background */
+    --text-color: #ffffff; /* White text */
+    --text-muted: #8e8e93;
+    --text-on-accent: #ffffff;
+    --accent-color: #0a84ff; /* Slightly brighter blue for dark mode */
+    --accent-color-darker: #0056b3; /* Keep darker for hover/active states */
+    --border-color: #3a3a3c;
+    --success-color: #30d158; /* Brighter green */
+    --danger-color: #ff453a; /* Brighter red */
+    --header-bg: var(--secondary-bg); /* Header matches card bg */
+    --header-text: var(--text-color);
+    --shadow-color: rgba(0, 0, 0, 0.3);
+}
+
+
+html {
+    font-size: 16px;
+}
+
+body {
+    font-family: var(--font-primary);
+    line-height: 1.5;
+    background-color: var(--primary-bg);
+    color: var(--text-color);
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    overscroll-behavior-y: contain; /* Prevent pull-to-refresh issues */
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-headings);
+    margin-bottom: var(--spacing-sm);
+    line-height: 1.3;
+}
+h2 {
+    font-size: 1.4rem;
+    font-weight: 600;
+    padding-bottom: var(--spacing-sm);
+    margin-bottom: var(--spacing-md);
+    color: var(--accent-color);
+}
+
+p {
+    margin-bottom: var(--spacing-md);
+}
+p.text-muted {
+    color: var(--text-muted);
+}
+p.small {
+    font-size: 0.85em;
+}
+
+
+/* --- Layout & View Switching --- */
+#main-content {
+    flex-grow: 1; /* Takes up space above bottom nav */
+    padding: var(--spacing-md);
+    padding-bottom: calc(var(--bottom-nav-height) + var(--spacing-md)); /* Space for bottom nav */
+    overflow-y: auto; /* Allow scrolling within main content */
+    position: relative; /* Needed for absolute positioning like FAB */
+}
+
+/* View containers */
+.view {
+    display: none; /* Hide all views by default */
+    width: 100%;
+    animation: fadeIn 0.3s ease-in-out; /* Simple fade transition */
+}
+.view.active {
+    display: block; /* Show only the active view */
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* --- Bottom Navigation --- */
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: var(--bottom-nav-height);
+    background-color: var(--secondary-bg);
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-around;
+    align-items: stretch; /* Make buttons fill height */
+    z-index: 1000;
+    box-shadow: 0 -2px 5px var(--shadow-color);
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.nav-btn {
+    flex-grow: 1;
+    background: none;
+    border: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: var(--spacing-xs) 0;
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: color 0.2s ease;
+    gap: 2px; /* Space between icon and text */
+}
+
+.nav-btn .nav-icon {
+    font-size: 1.4rem; /* Adjust icon size */
+    margin-bottom: 2px;
+}
+
+.nav-btn:hover {
+    color: var(--text-color);
+}
+
+.nav-btn.active {
+    color: var(--accent-color);
+    font-weight: 600;
+}
+.nav-btn.active .nav-icon {
+     /* Optional: slightly larger active icon? */
+}
+
+/* --- General Components --- */
+.card {
+    background-color: var(--secondary-bg);
+    border-radius: 10px;
+    padding: var(--spacing-md);
+    margin-bottom: var(--spacing-md);
+    box-shadow: 0 1px 3px var(--shadow-color);
+    /* border: 1px solid var(--border-color); */ /* Optional border */
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.card-container {
+    display: grid; /* Or flex */
+    gap: var(--spacing-md);
+    /* For grid layout: */
+    /* grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); */
+}
+
+button,
+input[type="submit"] {
+    padding: var(--spacing-sm) var(--spacing-lg);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 600;
+    transition: background-color 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
+    background-color: var(--accent-color);
+    color: var(--text-on-accent);
+}
+button:hover,
+input[type="submit"]:hover {
+    background-color: var(--accent-color-darker);
+    box-shadow: 0 2px 4px var(--shadow-color);
+}
+button:active,
+input[type="submit"]:active {
+    transform: translateY(1px);
+    box-shadow: none;
+}
+
+/* Button variations */
+button.secondary-button {
+    background-color: var(--secondary-bg);
+    color: var(--accent-color);
+    border: 1px solid var(--accent-color);
+}
+button.secondary-button:hover {
+    background-color: rgba(0, 122, 255, 0.1); /* Translucent accent color */
+    border-color: var(--accent-color); /* Keep border */
+}
+.dark-theme button.secondary-button:hover {
+     background-color: rgba(10, 132, 255, 0.15);
+}
+
+
+button.danger-button {
+    background-color: var(--danger-color);
+    color: #fff;
+    border: none;
+}
+button.danger-button:hover {
+    background-color: #d93025; /* Darker red */
+}
+.dark-theme button.danger-button:hover {
+     background-color: #ff6961; /* Lighter red for dark theme hover? */
+}
+
+button.back-btn, button.edit-btn {
+    background: none;
+    border: none;
+    color: var(--accent-color);
+    font-weight: normal;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    font-size: 0.95rem;
+}
+button.back-btn:hover, button.edit-btn:hover {
+    background-color: rgba(0, 122, 255, 0.1);
+    box-shadow: none;
+}
+
+/* Floating Action Button (FAB) style */
+.fab-button {
+    position: fixed; /* Relative to viewport or main container if positioned */
+    bottom: calc(var(--bottom-nav-height) + var(--spacing-lg)); /* Above nav bar */
+    right: var(--spacing-lg);
+    width: var(--fab-size);
+    height: var(--fab-size);
+    border-radius: 50%;
+    font-size: 1.8rem;
+    line-height: var(--fab-size);
+    padding: 0;
+    text-align: center;
+    box-shadow: 0 4px 10px var(--shadow-color);
+    z-index: 999;
+}
+.fab-button:hover {
+     box-shadow: 0 6px 15px var(--shadow-color);
+     transform: scale(1.05);
+}
+.fab-button:active {
+    transform: scale(0.95) translateY(1px);
+}
+
+
+/* Forms (largely reused, adapted for theme) */
+.form-group,
+.form-group fieldset {
+    margin-bottom: var(--spacing-lg);
+}
+.form-group label,
+fieldset legend {
+    display: block;
+    font-weight: 600;
+    margin-bottom: var(--spacing-sm);
+    color: var(--text-muted);
+    font-size: 0.9em;
+}
+input[type="text"],
+input[type="date"],
+textarea {
+    width: 100%;
+    padding: var(--spacing-md);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 1rem;
+    font-family: inherit;
+    background-color: var(--secondary-bg); /* Match card bg */
+    color: var(--text-color);
+    transition: border-color 0.2s ease, background-color 0.3s ease, color 0.3s ease;
+}
+input[type="text"]:focus,
+input[type="date"]:focus,
+textarea:focus {
+    outline: none;
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 2px var(--accent-color);
+}
+textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+#save-plan-btn {
+     display: block;
+     width: 100%;
+     margin-top: var(--spacing-md);
+}
+#delete-dream-btn {
+    width: 100%;
+    margin-top: var(--spacing-md);
+}
+
+/* Habit input group (Plan View) */
+.habit-input-group {
+    display: flex;
+    align-items: center;
+    margin-bottom: var(--spacing-sm);
+    gap: var(--spacing-sm);
+}
+.habit-input-group input {
+    flex-grow: 1;
+}
+.remove-habit-btn {
+    background: none;
+    border: none;
+    color: var(--danger-color);
+    font-size: 1.5em; /* Larger clickable area */
+    padding: 0 var(--spacing-xs);
+    line-height: 1;
+    cursor: pointer;
+    opacity: 0.7;
+    transition: opacity 0.2s ease;
+}
+.remove-habit-btn:hover {
+    opacity: 1;
+}
+
+
+/* --- View Specific Styles --- */
+
+/* Dashboard View */
+#dashboard-view h2 {
+    margin-bottom: var(--spacing-xs); /* Less space below title */
+}
+#dashboard-view > p { /* The subtitle */
+    color: var(--text-muted);
+    text-align: left; /* Align subtitle left */
+    margin-bottom: var(--spacing-lg);
+}
+.dream-card {
+    background-color: var(--secondary-bg);
+    border-radius: 10px;
+    padding: var(--spacing-md);
+    box-shadow: 0 1px 3px var(--shadow-color);
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.3s ease;
+}
+.dream-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 8px var(--shadow-color);
+}
+.dream-card h3 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--accent-color);
+    margin-bottom: var(--spacing-xs);
+}
+.dream-card .goal-summary {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    margin-bottom: var(--spacing-md);
+    display: -webkit-box; /* Truncate long goal text */
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+.card-metric {
+    font-size: 0.85rem;
+}
+.card-metric label {
+    color: var(--text-muted);
+    display: inline-block;
+    margin-right: var(--spacing-sm);
+}
+.card-metric span {
+    font-weight: 600;
+    color: var(--success-color);
+}
+.card-metric progress {
+    width: 100%;
+    height: 6px;
+    border-radius: 3px;
+    overflow: hidden;
+    border: none; /* Removed border */
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-color: var(--border-color); /* Track color */
+    margin-top: var(--spacing-xs);
+}
+.card-metric progress::-webkit-progress-bar { background-color: var(--border-color); border-radius: 3px; }
+.card-metric progress::-webkit-progress-value { background-color: var(--success-color); border-radius: 3px; transition: width 0.3s ease; }
+.card-metric progress::-moz-progress-bar { background-color: var(--success-color); border-radius: 3px; transition: width 0.3s ease; }
+
+#no-dreams-message {
+    color: var(--text-muted);
+    margin-top: var(--spacing-xl);
+}
+
+/* Detail View & Plan View Headers */
+.detail-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-md);
+    padding-bottom: var(--spacing-sm);
+    border-bottom: 1px solid var(--border-color);
+}
+.detail-header h2 {
+    margin: 0; /* Remove default margins */
+    padding: 0;
+    border: none;
+    font-size: 1.2rem; /* Smaller header */
+    flex-grow: 1; /* Allow title to take space */
+    text-align: center; /* Center title */
+}
+
+
+/* Dream Detail View - Mountain Visualization (reusing previous styles with new IDs) */
+#mountain-visualization { margin-top: 0; } /* Removed top margin */
+#mountain-visualization h3 { font-size: 0.85em; }
+#detail-dream-text { font-size: 1.3em; font-weight: 600; color: var(--accent-color); }
+#detail-smart-goal-text { font-size: 1.05em; transition: font-weight 0.3s ease, font-size 0.3s ease, color 0.3s ease; }
+.deadline-text { font-size: 0.85em; color: var(--text-muted); font-style: italic; margin-bottom: 0; }
+#progress-indicator label { font-size: 0.85em; }
+#detail-consistency-progress { height: 8px; border-radius: 4px; }
+#detail-consistency-progress::-webkit-progress-bar { background-color: var(--border-color); border-radius: 4px; }
+#detail-consistency-progress::-webkit-progress-value { background-color: var(--success-color); border-radius: 4px; }
+#detail-consistency-progress::-moz-progress-bar { background-color: var(--success-color); border-radius: 4px; }
+#detail-consistency-percentage { font-size: 0.9em; }
+
+/* Habit list in Detail View */
+#detail-habits-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.habit-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: var(--spacing-sm);
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: 8px;
+    transition: background-color 0.2s ease;
+    border: 1px solid var(--border-color);
+    background-color: var(--primary-bg); /* Slightly different bg for contrast */
+}
+.habit-item:hover { background-color: rgba(0,0,0, 0.03); }
+.dark-theme .habit-item:hover { background-color: rgba(255,255,255, 0.05); }
+
+.habit-item input[type="checkbox"] {
+    margin-right: var(--spacing-md);
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    accent-color: var(--accent-color); /* Use accent color for checks */
+    flex-shrink: 0; /* Prevent shrinking */
+}
+.habit-item label {
+    flex-grow: 1;
+    cursor: pointer;
+    color: var(--text-color); /* Ensure label color is correct */
+    transition: color 0.3s ease, opacity 0.3s ease;
+}
+.habit-item input[type="checkbox"]:checked + label {
+    text-decoration: line-through;
+    color: var(--text-muted);
+    opacity: 0.8;
+}
+
+/* Goal Prominence Class (Added to JS logic earlier) */
+.goal-boosted {
+    font-weight: bold !important;
+    color: var(--success-color) !important; /* Emphasize with success color */
+    transform: scale(1.02); /* Slightly larger */
+    transition: all 0.2s ease-in-out;
+}
+
+
+/* Metrics & Charts Section */
+#metrics-charts-section h3 {
+    color: var(--text-muted);
+    text-align: center;
+    font-size: 1rem;
+    margin-bottom: var(--spacing-md);
+}
+#metrics-charts-section p { /* Placeholder text */
+    text-align: center;
+    color: var(--text-muted);
+}
+
+
+/* Quotes View */
+#quotes-view h2 { text-align: center; }
+.quote-display {
+    text-align: center;
+    padding: var(--spacing-lg);
+}
+.quote-display blockquote {
+    font-size: 1.2rem;
+    font-style: italic;
+    margin-bottom: var(--spacing-md);
+    line-height: 1.6;
+    color: var(--text-color);
+}
+.quote-display cite {
+    font-style: normal;
+    color: var(--text-muted);
+    font-weight: 600;
+}
+#next-quote-btn {
+    display: block;
+    margin: var(--spacing-lg) auto 0;
+    width: fit-content; /* Button size adjusts to text */
+}
+
+
+/* Settings View */
+.setting-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--spacing-md); /* Consistent padding */
+}
+.setting-item h3 { /* Sub-header in settings card */
+    width: 100%;
+    margin-bottom: var(--spacing-md);
+    padding-bottom: var(--spacing-sm);
+    border-bottom: 1px solid var(--border-color);
+    font-size: 1rem;
+    color: var(--text-muted);
+}
+.setting-item label:first-child { /* Text label */
+    font-weight: 500;
+}
+.setting-item p.small { /* Description text */
+    width: 100%;
+    margin-top: var(--spacing-sm);
+    margin-bottom: 0;
+}
+#reset-data-btn { /* Specific button adjustment */
+    width: auto; /* Allow button to size itself */
+    margin-top: var(--spacing-md);
+}
+
+/* Toggle Switch CSS */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 50px; /* Width of the switch */
+  height: 28px; /* Height of the switch */
+}
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--border-color);
+  transition: .4s;
+}
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 20px; /* Size of the knob */
+  width: 20px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  transition: .4s;
+}
+input:checked + .slider {
+  background-color: var(--accent-color);
+}
+input:focus + .slider {
+  box-shadow: 0 0 1px var(--accent-color);
+}
+input:checked + .slider:before {
+  transform: translateX(22px); /* Move knob to the right */
+}
+.slider.round { border-radius: 28px; } /* Make it round */
+.slider.round:before { border-radius: 50%; }
+
+
+/* --- Responsiveness --- */
+/* Base styles are mobile-first. Add adjustments for larger screens if needed. */
+@media (min-width: 600px) {
+    /* Example: Make cards wider on tablets */
+    /* #main-content { max-width: 700px; margin: 0 auto; } */
+    /* Example: Grid layout for dashboard cards on tablet+ */
+     .card-container {
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    }
+     .fab-button { /* Adjust FAB position if main content has max-width */
+        /* left: calc(50% + 350px - var(--fab-size) - var(--spacing-lg)); */ /* Example calculation */
+     }
+}
+
+@media (min-width: 900px) {
+    /* Further adjustments for desktop */
+}
